@@ -34,8 +34,7 @@ Para instalar y ejecutar el proyecto localmente, sigue estos pasos:
 
 ## Ingresando link:
 ```bash
-https://lucafattorinii.github.io/AnotadorDeTruco/
-             
+https://lucafattorinii.github.io/AnotadorDeTruco/          
 ```
 
    
