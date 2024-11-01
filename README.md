@@ -33,8 +33,8 @@ Para instalar y ejecutar el proyecto localmente, sigue estos pasos:
 3. Abre el archivo `index.html` en tu navegador preferido.
 
 ## Ingresando link
-    ```bash
-    [cd AnotadorDeTruco](https://lucafattorinii.github.io/AnotadorDeTruco/)
+    ```
+    https://lucafattorinii.github.io/AnotadorDeTruco/
     ```
 
 ## Contribuciones
