@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anotador de Truco</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #2e8b57; /* Fondo verde oscuro */
+            color: white; /* Texto en blanco */
+            overflow-x: hidden;
+        }
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #3cb371; /* Fondo del menú verde */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .menu-contenido {
+            padding: 60px 20px 20px 20px;
+        }
+        .menu-contenido button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.2em;
+            color: white; /* Texto en blanco */
+        }
+        .menu-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            color: white; /* Icono en blanco */
+        }
+        .menu-cerrar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white; /* Icono en blanco */
+        }
+        .menu-titulo {
+            font-size: 1.5em;
+            text-align: left;
+            padding: 20px;
+            color: white; /* Texto en blanco */
+        }
+        .contenido {
+            transition: transform 0.3s ease;
+        }
+        .marcador {
+            display: none;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .equipo {
+            margin: 0 20px;
+        }
+        .equipo h2 {
+            margin-bottom: 10px;
+        }
+        .puntuacion {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        button {
+            font-size: 1em;
+            padding: 10px;
+            margin: 5px;
+            background-color: #3cb371; /* Botones verdes */
+            color: white; /* Texto en blanco */
+            border: none;
+            cursor: pointer;
+        }
+        input {
+            font-size: 1em;
+            padding: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            background-color: #3cb371; /* Fondo del input verde */
+            color: white; /* Texto en blanco */
+            border: none;
+        }
+        .pantalla-inicio {
+            margin-top: 50px;
+        }
+        .pantalla-inicio button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #3cb371; /* Botones verdes */
+            color: white; /* Texto en blanco */
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu" id="menu">
+        <button class="menu-cerrar" onclick="alternarMenu()">←</button>
+        <div class="menu-titulo" id="menuTitulo">Menú</div>
+        <div class="menu-contenido">
+            <button onclick="editarNombres()">Editar nombres</button>
+            <button onclick="reiniciarJuego()">Reiniciar partida</button>
+        </div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" onclick="alternarMenu()">☰</button>
+    <div class="contenido" id="contenido">
+        <h1 id="tituloPrincipal">Anotador de Truco</h1>
+        <div class="pantalla-inicio" id="pantallaInicio">
+            <p>Partida de truco a:</p>
+            <button onclick="iniciarJuego(15)">15</button>
+            <button onclick="iniciarJuego(30)">30</button>
+        </div>
+        <div class="marcador" id="marcador">
+            <div class="equipo">
+                <input type="text" id="nombreEquipo1" placeholder="Equipo 1" oninput="actualizarNombreEquipo('nombreEquipo1', 'tituloEquipo1')">
+                <h2 id="tituloEquipo1">Equipo 1</h2>
+                <div class="puntuacion" id="puntuacion1">0</div>
+                <button onclick="sumarPunto('puntuacion1')">Sumar Punto</button>
+                <button onclick="restarPunto('puntuacion1')">Restar Punto</button>
+            </div>
+            <div class="equipo">
+                <input type="text" id="nombreEquipo2" placeholder="Equipo 2" oninput="actualizarNombreEquipo('nombreEquipo2', 'tituloEquipo2')">
+                <h2 id="tituloEquipo2">Equipo 2</h2>
+                <div class="puntuacion" id="puntuacion2">0</div>
+                <button onclick="sumarPunto('puntuacion2')">Sumar Punto</button>
+                <button onclick="restarPunto('puntuacion2')">Restar Punto</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let puntosMaximos = 15;
+
+        function alternarMenu() {
+            let menu = document.getElementById('menu');
+            let contenido = document.getElementById('contenido');
+            let menuToggle = document.getElementById('menuToggle');
+            let menuTitulo = document.getElementById('menuTitulo');
+            if (menu.style.transform === 'translateX(0%)') {
+                menu.style.transform = 'translateX(-100%)';
+                contenido.style.transform = 'translateX(0)';
+                menuToggle.style.display = 'block';
+                menuTitulo.style.display = 'none';
+            } else {
+                menu.style.transform = 'translateX(0%)';
+                contenido.style.transform = 'translateX(250px)';
+                menuToggle.style.display = 'none';
+                menuTitulo.style.display = 'block';
+            }
+        }
+
+        function iniciarJuego(puntos) {
+            puntosMaximos = puntos;
+            document.getElementById('tituloPrincipal').textContent = `Anotador de Truco (Partida a ${puntos})`;
+            document.getElementById('pantallaInicio').style.display = 'none';
+            document.getElementById('marcador').style.display = 'flex';
+        }
+
+        function sumarPunto(equipo) {
+            let puntuacion = document.getElementById(equipo);
+            puntuacion.textContent = parseInt(puntuacion.textContent) + 1;
+            ocultarInputs();
+            verificarGanador();
+        }
+
+        function restarPunto(equipo) {
+            let puntuacion = document.getElementById(equipo);
+            let puntuacionActual = parseInt(puntuacion.textContent);
+            if (puntuacionActual > 0) {
+                puntuacion.textContent = puntuacionActual - 1;
+            }
+        }
+
+        function actualizarNombreEquipo(inputId, tituloId) {
+            let input = document.getElementById(inputId);
+            let titulo = document.getElementById(tituloId);
+            titulo.textContent = input.value || input.placeholder;
+        }
+
+        function ocultarInputs() {
+            document.getElementById('nombreEquipo1').style.display = 'none';
+            document.getElementById('nombreEquipo2').style.display = 'none';
+        }
+
+        function mostrarInputs() {
+            document.getElementById('nombreEquipo1').style.display = 'block';
+            document.getElementById('nombreEquipo2').style.display = 'block';
+        }
+
+        function reiniciarJuego() {
+            document.getElementById('puntuacion1').textContent = 0;
+            document.getElementById('puntuacion2').textContent = 0;
+            document.getElementById('nombreEquipo1').value = '';
+            document.getElementById('nombreEquipo2').value = '';
+            document.getElementById('tituloEquipo1').textContent = 'Equipo 1';
+            document.getElementById('tituloEquipo2').textContent = 'Equipo 2';
+            document.getElementById('tituloPrincipal').textContent = 'Anotador de Truco';
+            mostrarInputs();
+            document.getElementById('pantallaInicio').style.display = 'block';
+            document.getElementById('marcador').style.display = 'none';
+            alternarMenu();
+        }
+
+        function editarNombres() {
+            mostrarInputs();
+            alternarMenu();
+        }
+
+        function verificarGanador() {
+            let puntuacion1 = parseInt(document.getElementById('puntuacion1').textContent);
+            let puntuacion2 = parseInt(document.getElementById('puntuacion2').textContent);
+        if (puntuacion1 === puntosMaximos) {
+            alert('¡Felicitaciones ' + document.getElementById('tituloEquipo1').textContent + '! Ganaste la partida.');
+            reiniciarJuego();
+        } else if (puntuacion2 === puntosMaximos) {
+            alert('¡Felicitaciones ' + document.getElementById('tituloEquipo2').textContent + '! Ganaste la partida.');
+            reiniciarJuego();
+        }
+        }
+
+    </script>
+</body>
+</html>
